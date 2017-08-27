@@ -16,3 +16,7 @@ SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 SHOW VARIABLES LIKE '%ISOL%';
 ```
 
+### Shows the status of a particular table
+```sql
+SHOW TABLE STATUS LIKE 'blog_posts';
+```
