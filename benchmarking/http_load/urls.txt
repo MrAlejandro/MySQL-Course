@@ -1,0 +1,5 @@
+http://cs-cart.local/
+http://cs-cart.local/index.php?dispatch=product_features.view_all&filter_id=10
+http://cs-cart.local/index.php?dispatch=categories.view&category_id=224
+http://cs-cart.local/index.php?dispatch=pages.view&page_id=2
+http://cs-cart.local/index.php?dispatch=pages.view&page_id=20
