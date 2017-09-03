@@ -83,3 +83,11 @@ Can be attached to a process and show what it has stucked with
 ps -aux | grep mysql
 pt-pmp -p 14805 >> stack.txt
 ```
+
+### Using strace
+Too costy to use on production
+```bash
+strace -cfp $(pidof mysqld)
+Process 16677 attached with 29 threads
+^CProcess 16677 detached
+```
