@@ -71,3 +71,8 @@ mysqladmin -uroot -p ext -i1 | awk '
 ```bash
 mysql -uroot -p -e 'SHOW PROCESSLIST\G' | grep State: | sort | uniq -c | sort -rn
 ````
+
+### Using slow query log
+```bash
+awk '/^# Time:/{print $3, $4, c;c=0}/^# User/{c++}' slow.log
+```
