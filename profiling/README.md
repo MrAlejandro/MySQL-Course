@@ -1,3 +1,10 @@
+### Using Percona Toolkit Query Digest
+```bash
+sudo cp -rf /var/log/mysql/slow.log ~/profile
+sudo chmod 777 slow.log
+pt-query-digest slow.log >> 1.txt
+```
+
 ### Using built in profiler
 ```sql
 -- enable profiling for current session
