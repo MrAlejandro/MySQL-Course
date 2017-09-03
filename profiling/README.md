@@ -57,3 +57,12 @@ SELECT event_name, count_star, sum_timer_wait
 FROM performance_schema.events_waits_summary_global_by_event_name
 ORDER BY sum_timer_wait DESC LIMIT 5;
 ```
+
+### Using SHOW GLOBAL STATUSЕ
+The following commant show 3 columns (every 1 second): queries per second, threads connected and threads running (currently exequting)
+```bash
+mysqladmin -uroot -p ext -i1 | awk '
+    /Queries/{q=$4-qp;qp=$4}
+    /Threads_connected/{tc=$4}
+    /Threads_running/{printf "%5d %5d %5d\n", q, tc, $4}'
+```
