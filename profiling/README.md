@@ -76,3 +76,10 @@ mysql -uroot -p -e 'SHOW PROCESSLIST\G' | grep State: | sort | uniq -c | sort -r
 ```bash
 awk '/^# Time:/{print $3, $4, c;c=0}/^# User/{c++}' slow.log
 ```
+
+### Percona's poormansprofiler
+Can be attached to a process and show what it has stucked with
+```bash
+ps -aux | grep mysql
+pt-pmp -p 14805 >> stack.txt
+```
