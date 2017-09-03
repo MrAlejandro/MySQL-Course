@@ -66,3 +66,8 @@ mysqladmin -uroot -p ext -i1 | awk '
     /Threads_connected/{tc=$4}
     /Threads_running/{printf "%5d %5d %5d\n", q, tc, $4}'
 ```
+
+### Using SHOW PROCESSLIST
+```bash
+mysql -uroot -p -e 'SHOW PROCESSLIST\G' | grep State: | sort | uniq -c | sort -rn
+````
