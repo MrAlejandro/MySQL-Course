@@ -4,6 +4,14 @@ sudo cp -rf /var/log/mysql/slow.log ~/profile
 sudo chmod 777 slow.log
 pt-query-digest slow.log >> 1.txt
 ```
+This tool's output gives an offset like 289141
+```
+# Query 1: 0.67 QPS, 0.01x concurrency, ID 0x8FA22108FF85434C at byte 289141
+```
+that can be used for inspecting the query in the original log
+```
+tail -c +289141 ./slow.log | head -n100
+```
 
 ### Using built in profiler
 ```sql
