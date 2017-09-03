@@ -33,3 +33,11 @@ WHERE QUERY_ID = @query_id
 GROUP BY STATE
 ORDER BY Total_R DESC;
 ```
+
+### Using SHOW STATUS (not really profiling)
+```sql
+FLUSH STATUS;
+SELECT * FROM cs_cart.cscart_products;
+SHOW STATUS WHERE Variable_name LIKE 'Handler%'
+    OR Variable_name LIKE 'Created%';
+```
