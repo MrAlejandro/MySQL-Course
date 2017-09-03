@@ -49,3 +49,11 @@ SELECT * FROM cs_cart.cscart_products;
 SHOW STATUS WHERE Variable_name LIKE 'Handler%'
     OR Variable_name LIKE 'Created%';
 ```
+
+### Using the Performance Schema
+The following query shows the top 5 reasons that cause the system to wait
+```sql
+SELECT event_name, count_star, sum_timer_wait
+FROM performance_schema.events_waits_summary_global_by_event_name
+ORDER BY sum_timer_wait DESC LIMIT 5;
+```
