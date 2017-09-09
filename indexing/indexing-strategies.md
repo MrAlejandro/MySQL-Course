@@ -122,3 +122,42 @@ EXPLAIN SELECT film_id, actor_id FROM sakila.film_actor WHERE actor_id = 1 OR fi
 id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra
 --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
  1 | SIMPLE | film_actor | index_merge | PRIMARY,idx_fk_film_id | PRIMARY,idx_fk_film_id | 2,2 | NULL | 29 | Using union(PRIMARY,idx_fk_film_id); Using where
+ 
+# Choosing column order (B-Tree index)
+* The index in sorted by first, then second (etc) column in the index
+* It is good (but not crucial) to place the most selective column as the leftmost column in the index. This approach is good to satisfy the condition in the `WHERE` clause, without sorting or grouping.
+ 
+What order is better for the following query
+ 
+```sql
+SELECT * FROM `payment` WHERE staff_id = 2 AND customer_id = 584;
+```
+ 
+```
+  SELECT SUM(staff_id = 2), SUM(customer_id = 584) FROM payment;
+```
+
+SUM(staff_id = 2) | SUM(customer_id = 584) 
+--- | ---
+7992  | 30
+
+We have higher cardinality for `customer_id` wihin `staff_id = 2` but for another request the overall picture might significally differs, from this one, so if we optimize query for this, particular query the other queries migth start suffering from our changes, so it is a good idea to confirm the changes, by calculating general selectivity of the columns
+
+```sql
+SELECT 
+    COUNT(DISTINCT staff_id)/COUNT(*) AS staff_selectivity,
+    COUNT(DISTINCT customer_id)/COUNT(*) AS customer_selectivity,
+    COUNT(*)
+FROM payment;
+```
+
+staff_selectivity | customer_selectivity | COUNT(*) 
+--- | --- | ---
+0.0001 | 0.0373 | 16049 
+
+So the following optimization seems to be a good one
+
+```sql
+ALTER TABLE payment ADD KEY(customer_id, staff_id);
+```
+ 
