@@ -160,4 +160,16 @@ So the following optimization seems to be a good one
 ```sql
 ALTER TABLE payment ADD KEY(customer_id, staff_id);
 ```
- 
+
+# Clustered indexes (focused on InnoDB)
+
+* Rows and with adjasent key values are stored close to each other
+* Only one clustered index per table is avilable
+* InnoDB clusters the data by the primary key (or unique unnullable index, if PK does not exist)
+* Data access is fast
+* Insert speer depends on insertion order
+* Updating is expepensive
+* Page split if data not fits into one page
+* Slow full table scan
+* Nonclustered indexed can be larger
+* Secondary index accesses require two index lookups
