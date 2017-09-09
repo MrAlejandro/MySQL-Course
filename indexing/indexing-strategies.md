@@ -1,4 +1,4 @@
-## Isolating the column
+# Isolating the column
 
 The column should not be a part of an expression, so the following where statemen has an expression (so not isolated) so the index cannot be used
 
@@ -110,3 +110,15 @@ The higher selectivity the better
 ALTER TABLE sakila.city_demo ADD KEY (city(7));
 ```
 
+# Multicolumn indexes
+
+## Common mistakes
+* Create index for every column (separately) or create index for "columns that apper in the `WHERE` clause", is bad approach, even though MySQL starting from 5.0 can use so called, *index merge* strategy, and use multiple indexes.
+
+```sql
+EXPLAIN SELECT film_id, actor_id FROM sakila.film_actor WHERE actor_id = 1 OR film_id = 1
+```
+
+id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra
+--- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+ 1 | SIMPLE | film_actor | index_merge | PRIMARY,idx_fk_film_id | PRIMARY,idx_fk_film_id | 2,2 | NULL | 29 | Using union(PRIMARY,idx_fk_film_id); Using where
