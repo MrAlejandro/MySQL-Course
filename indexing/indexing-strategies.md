@@ -173,3 +173,15 @@ ALTER TABLE payment ADD KEY(customer_id, staff_id);
 * Slow full table scan
 * Nonclustered indexed can be larger
 * Secondary index accesses require two index lookups
+
+# Covering indexes
+
+This is not a separate type of index, it just mean that the query is able to fetch the data right from the index itself, instead of fetching a row. It can be checked by examining the `Extra` column in `EXPLAIN`, if the value is `Using index` - the magic has happed.
+
+```sql
+EXPLAIN SELECT store_id, film_id FROM sakila.inventory;
+```
+
+id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra
+--- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+1 | SIMPLE | inventory | index | NULL | idx_store_id_film_id | 3 | NULL | 4581 | Using index
