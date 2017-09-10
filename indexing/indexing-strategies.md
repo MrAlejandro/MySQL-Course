@@ -185,3 +185,34 @@ EXPLAIN SELECT store_id, film_id FROM sakila.inventory;
 id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra
 --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
 1 | SIMPLE | inventory | index | NULL | idx_store_id_film_id | 3 | NULL | 4581 | Using index
+
+# Indexies and Locking
+
+InnoDB sometimes can lock rows that not even fall in the end result set (in the frames on one uncommited transaction). Ex:
+
+```sql
+SET AUTOCOMMIT=0;
+BEGIN;
+SELECT actor_id FROM sakila.actor WHERE actor_id < 5 AND actor_id <> 1 FOR UPDATE;
+```
+
+The query above, will lock rows from 2 up to 4, and additionaly it will lock the first row. This happens because MySQL did not tell InnoDB that it have to exclude the first row, and will exclude it by itself applying another part of the where caluse `actor_id <> 1`, it can be verified by looking at the explain
+
+```sql
+EXPLAIN SELECT actor_id FROM sakila.actor WHERE actor_id < 5 AND actor_id <> 1 FOR UPDATE;
+```
+
+id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra
+--- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+1 | SIMPLE | actor | range | PRIMARY | PRIMARY | 2 | NULL | 3 | Using where; Using index
+
+The `Extra` column sais it used both index and where, index was used for fetching (and lock) first four rows, and the where clause to filter out the first row.
+The second way to confirm the aasumption of locking the first row is to run the following query from another session.
+
+```sql
+SET AUTOCOMMIT=0;
+BEGIN;
+SELECT actor_id FROM sakila.actor WHERE actor_id = 1 FOR UPDATE;
+```
+
+The query above won't be finished untill the query in the first session is uncommited (`COMMIT;`), because the first row is locked for update.
