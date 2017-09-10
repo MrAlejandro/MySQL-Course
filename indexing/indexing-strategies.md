@@ -280,3 +280,11 @@ Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardina
 actor | 0 | PRIMARY | 1 | actor_id | A | 200 | NULL | NULL |  | BTREE |  | 
 actor | 1 | idx_actor_last_name | 1 | last_name | A | 200 | NULL | NULL |  | BTREE |  | 
 
+* Updating statistics is a very expensive operation, and may slow the server down
+* Automatic statistics recalculation might be disablet, so in this case it should be done manually, or bad query plans guaranteed.
+
+## Data fragmrnataion
+
+* MyISAM suffers from fragmentation more that InnoDB
+* `OPTIMIZE TABLE` can help or `ALTER TABLE table ENGINE=<engine>;` (same engine that currently in use) can too
+* Use *Percona XtraBackup* with *--stats* option
