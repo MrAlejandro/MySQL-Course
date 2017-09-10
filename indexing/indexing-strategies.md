@@ -253,3 +253,30 @@ SELECT <cols> FROM profiles
             WHERE x.sex = 'M' ORDER BY rating LIMIT 100000, 10
     ) AS x USING(<primary key cols>);
 ```
+
+# INdex and table maintenance
+
+## Corruption
+
+* MyISAM is more likely to be corrupted that InnoDB by it's design
+* Use `CHECK TABLE` to check if it is currupted
+* Use `REPAIR TABLE` to repair it
+* If there is no `REPAIR TABLE` the `ALTER TABLE innodb_tbl ENGINE=INNODB;` might help (engine must stay the same)
+* *myisamcheck*
+* *Percona DB Data Recovery* may help to recover damaged data
+
+## Updating Index Statistics
+
+* Sometimes MySQL may have bad decisions based on outdated statisticts received from the DB engine, `ANALYZE TABLE` may help
+* MyISAM makes full index scan, so the whol table is locked when executing `ANALYZE TABLE`
+* Find out cardinality with 
+
+```sql
+SHOW INDEX FROM actor;
+```
+
+Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+actor | 0 | PRIMARY | 1 | actor_id | A | 200 | NULL | NULL |  | BTREE |  | 
+actor | 1 | idx_actor_last_name | 1 | last_name | A | 200 | NULL | NULL |  | BTREE |  | 
+
