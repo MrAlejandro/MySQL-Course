@@ -7,3 +7,12 @@
 and temporary index table can be used, and the second tells that it is better to use temporary table on disk with sorting.
 * *SQL_BUFFER_RESULT* - allows to put result into a temporary table, and release table locks. Use some extra server memory.
 * *SQL_CACHE* and *SQL_NO_CACHE* - defines is the query is a candidate for caching in the query cache.
+* *SQL_CALC_FOUND_ROWS* - useful with `LIMIT` in order to know total rows quantity. Better to avoid.
+* *FOR UPDATE* and *LOCK IN SHARE MODE* - for row-level locks (InnoDB). Better to avoid.
+* *USE INDEX*, *IGNORE INDEX* and *FORCE INDEX* - index usage directives.
+
+# Configuration variables
+
+* *optimizer_search_depth* - tells optimizer how it shoud dive during optimization (in case of huge amount of execution options abailable)
+* *optimizer_prune_level* - lets optimizer skip certain plans based on the number of rows examined.
+* *optimizer_switch* - set of flag to enable/disable optimizer features.
