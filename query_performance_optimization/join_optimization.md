@@ -47,3 +47,10 @@ Last_query_cost | 2611.999000
 And the query that was instructed to preceive join orders, will require about 1000 probes into film_actor and actor, one for each row in the first table.
 
 So in most cases it is better to leave the optimization to to the MySQL server.
+
+## Some general hints
+
+* Index columns from `ON` or `USING` clauses. 
+* If optimizer desides to join tables in order such as *B* *A* on column *c*, this column has to be indexed in the *A* table only (if such an index does not needed for other purposes in the tabe *A*)
+* Try to use only one table for `GROUP BY` or `ORDER BY` expression, in order MySQL to try to use inexes for these operations.
+* Be careful when upgrading MySQL because of changing logic.
