@@ -39,3 +39,48 @@ WHERE EXISTS(
 ```
 
 or even fetch all film_ids in the separate query, and pass them in the second one
+
+## Update and Select on the same table
+
+Lets create a copy of sakila's customer table and add a new column that will contain the names cuantity
+
+```sql
+INSERT INTO customer_copy SELECT * FROM customer;
+ALTER TABLE customer_copy ADD COLUMN fname_count TINYINT(3) AFTER first_name;
+```
+
+The following query will fail because of the specified limitation
+
+```sql
+UPDATE customer_copy AS outer_table
+    SET fname_count = (
+        SELECT COUNT(*) FROM customer_copy AS inner_table
+        WHERE inner_tbl.first_name = outer_table.first_name
+    );
+    
+SHOW WARNINGS;
+```
+
+Level | Code | Message
+--- | --- | ---
+Error | 1093 | You can't specify target table 'outer_table' for update in FROM clause
+
+Here is a workaround for this limitation
+
+```sql
+UPDATE customer_copy 
+    INNER JOIN(
+        SELECT first_name, COUNT(*) AS cnt
+        FROM customer_copy
+        GROUP BY first_name
+    ) AS der USING(first_name)
+SET customer_copy.fname_count = der.cnt;
+
+SELECT first_name, fname_count FROM customer_copy WHERE fname_count > 1 ORDER BY first_name DESC LIMIT 3;
+```
+
+first_name | fname_count
+--- | ---
+WILLIE | 2
+WILLIE | 2
+TRACY | 2
