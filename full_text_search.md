@@ -32,3 +32,22 @@ film_id | title | RIGHT(description, 25) | relevnce
 110 | CABIN FLASH | Shark in A Baloon Factory | 2.275989532470703
 186 | CRAFT OUTFIELD | rator in A Baloon Factory | 2.275989532470703
 187 | CRANES RESERVOIR | ogist in A Baloon Factory | 2.275989532470703
+
+# Boolean binary search
+* `newyork` - row containing *newyork* ranked higher
+* `~newyork` - row containing *newyork* ranked lower
+* `+newyork` - row must contain *newyork*
+* `-newyork` - row must NOT contain *newyork*
+* `new*` - row containing words that bing with *new* rank higher
+
+* so the following query will find only one row
+
+```sql
+SELECT film_id, title, RIGHT(description, 25)
+FROM sakila.film_text
+WHERE MATCH(title, description) AGAINST('+factory +casualties' IN BOOLEAN MODE);
+```
+
+film_id | title | RIGHT(description, 25)
+--- | --- | --- 
+831 | SPIRITED CASUALTIES | a Car in A Baloon Factory
