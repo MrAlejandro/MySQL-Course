@@ -51,3 +51,11 @@ WHERE MATCH(title, description) AGAINST('+factory +casualties' IN BOOLEAN MODE);
 film_id | title | RIGHT(description, 25)
 --- | --- | --- 
 831 | SPIRITED CASUALTIES | a Car in A Baloon Factory
+
+# Phrase search 
+* Can be performed by quoting multible words
+```sql
+SELECT film_id, title, RIGHT(description, 25)
+FROM sakila.film_text
+WHERE MATCH(title, description) AGAINST('"spirited casualties"' IN BOOLEAN MODE);
+```
