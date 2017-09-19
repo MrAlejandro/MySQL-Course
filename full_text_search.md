@@ -54,6 +54,8 @@ film_id | title | RIGHT(description, 25)
 
 # Phrase search 
 * Can be performed by quoting multible words
+* Tends to be quiet slow
+
 ```sql
 SELECT film_id, title, RIGHT(description, 25)
 FROM sakila.film_text
